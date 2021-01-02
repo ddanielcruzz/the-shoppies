@@ -72,11 +72,6 @@ function App() {
       target: { value },
     } = evt;
 
-    // const trimmedValue = value.trim();
-
-    // if (trimmedValue !== movieTitle) {
-    //   setMovieTitle(trimmedValue);
-    // }
     setMovieTitle(value);
   };
 
