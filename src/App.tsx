@@ -9,6 +9,7 @@ export interface Movie {
   Title: string;
   Year: string;
   imdbID: string;
+  isNominated: boolean;
 }
 export interface QueryResponse {
   Response: string;
@@ -36,13 +37,32 @@ const fetchMovies: QueryFunction = async ({
 };
 
 function App() {
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [movieTitle, setMovieTitle] = useState("blade runner");
   const [nominatedMovies, setNominatedMovies] = useState<Movie[]>([]);
   const debouncedMovieTitle = useDebounce(movieTitle, 1000);
 
   const { data } = useQuery<unknown, unknown, QueryResponse>(
     ["movies", debouncedMovieTitle],
-    fetchMovies
+    fetchMovies,
+    {
+      onSuccess: (data) => {
+        const fetchedMovies = data.Search.map((movie) => {
+          if (
+            nominatedMovies.find(
+              (nominated) => nominated.imdbID === movie.imdbID
+            )
+          )
+            return { ...movie, isNominated: true };
+
+          return {
+            ...movie,
+            isNominated: false,
+          };
+        });
+        setMovies(fetchedMovies);
+      },
+    }
   );
 
   console.log(data);
@@ -70,10 +90,15 @@ function App() {
       <section className={styles.results}>
         <MovieResults
           movieTitle={movieTitle}
-          data={data}
+          movies={movies}
           setNominatedMovies={setNominatedMovies}
+          setMovies={setMovies}
         />
-        <NominatedMovies nominatedMovies={nominatedMovies} />
+        <NominatedMovies
+          movies={movies}
+          setMovies={setMovies}
+          nominatedMovies={nominatedMovies}
+        />
       </section>
     </main>
   );

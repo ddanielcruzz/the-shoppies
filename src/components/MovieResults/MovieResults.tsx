@@ -1,36 +1,54 @@
 import React from "react";
-import { Movie, QueryResponse } from "../../App";
+import { Movie } from "../../App";
 import appStyles from "../../App.module.css";
 
 interface MovieResultsProps {
   movieTitle?: string;
-  data?: QueryResponse;
+  movies: Movie[];
   setNominatedMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
+  setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
 }
 
 export const MovieResults = ({
   movieTitle,
-  data,
+  movies,
   setNominatedMovies,
+  setMovies,
 }: MovieResultsProps) => {
   return (
     <section className={appStyles.container}>
       <h3>Results for {movieTitle}</h3>
       <ul>
-        {data &&
-          data.Search.map((movie) => {
-            const { imdbID, Title, Year } = movie;
-            return (
-              <li key={imdbID}>
-                <h2>{Title}</h2> <p>{Year}</p>
-                <button
-                  onClick={() => setNominatedMovies((prev) => [...prev, movie])}
-                >
-                  Nominate
-                </button>
-              </li>
-            );
-          })}
+        {movies.map((movie) => {
+          const { imdbID, Title, Year, isNominated } = movie;
+          return (
+            <li key={imdbID}>
+              <h2>{Title}</h2> <p>{Year}</p>
+              <button
+                disabled={isNominated}
+                onClick={() => {
+                  setMovies(
+                    movies.map((outMovie) => {
+                      if (outMovie.imdbID === movie.imdbID) {
+                        return {
+                          ...outMovie,
+                          isNominated: true,
+                        };
+                      }
+                      return outMovie;
+                    })
+                  );
+                  setNominatedMovies((prev) => [
+                    ...prev,
+                    { ...movie, isNominated: true },
+                  ]);
+                }}
+              >
+                Nominate
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
