@@ -98,6 +98,7 @@ function App() {
           movies={movies}
           setMovies={setMovies}
           nominatedMovies={nominatedMovies}
+          setNominatedMovies={setNominatedMovies}
         />
       </section>
     </main>
