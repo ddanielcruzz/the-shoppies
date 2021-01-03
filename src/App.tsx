@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./App.module.css";
-import { QueryFunction, useQuery } from "react-query";
+import { QueryFunction, QueryFunctionContext, useQuery } from "react-query";
 import { useDebounce } from "./lib/hooks/useDebounce";
 import { MovieResults, NominatedMovies } from "./components";
 
@@ -20,15 +20,16 @@ export interface QueryResponse {
 // TODO: When you add an space it reloads the data, maybe remove react query to have more control of fetching, or maybe it's ok as user may input another word
 const fetchMovies: QueryFunction = async ({
   queryKey,
-}: {
-  queryKey: [string, string];
-}) => {
-  const [, movieTitle] = queryKey;
+}: QueryFunctionContext<string[]>) => {
+  const [, movieTitle, page] = queryKey;
+  console.log(queryKey);
 
   const res = await fetch(
     `https://www.omdbapi.com/?apikey=${
       process.env.REACT_APP_API
-    }&type=movie&s=${encodeURI(movieTitle.toLocaleLowerCase().trim())}`
+    }&type=movie&page=${page}&s=${encodeURI(
+      movieTitle.toLocaleLowerCase().trim()
+    )}`
   );
 
   if (!res.ok) throw new Error("Network request failed");
@@ -40,12 +41,14 @@ function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [movieTitle, setMovieTitle] = useState("blade runner");
   const [nominatedMovies, setNominatedMovies] = useState<Movie[]>([]);
+  const [page, setPage] = useState(1);
   const debouncedMovieTitle = useDebounce(movieTitle, 1000);
 
   const { data } = useQuery<unknown, unknown, QueryResponse>(
-    ["movies", debouncedMovieTitle],
+    ["movies", debouncedMovieTitle, page],
     fetchMovies,
     {
+      keepPreviousData: true,
       onSuccess: (data) => {
         const fetchedMovies = data.Search.map((movie) => {
           if (
@@ -54,7 +57,6 @@ function App() {
             )
           )
             return { ...movie, isNominated: true };
-
           return {
             ...movie,
             isNominated: false,
@@ -64,8 +66,6 @@ function App() {
       },
     }
   );
-
-  console.log(data);
 
   const handleMovieSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -88,6 +88,9 @@ function App() {
           movies={movies}
           setNominatedMovies={setNominatedMovies}
           setMovies={setMovies}
+          setPage={setPage}
+          totalResults={Number(data?.totalResults)}
+          page={page}
         />
         <NominatedMovies
           movies={movies}
