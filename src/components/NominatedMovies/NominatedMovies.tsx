@@ -36,12 +36,13 @@ export const NominatedMovies = ({
 
   return (
     <section className={appStyles.container}>
+      <h2>Nominations</h2>
       <ul>
         {nominatedMovies.map((movie) => {
           const { imdbID, Title, Year, isNominated } = movie;
           return (
             <li key={imdbID}>
-              <h2>{Title}</h2> <p>{Year}</p>
+              <h3>{Title}</h3> <p>{Year}</p>
               <button
                 disabled={!isNominated}
                 onClick={() => handleRemoval(movie)}

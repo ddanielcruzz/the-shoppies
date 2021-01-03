@@ -2,6 +2,19 @@
   background-color: #ffffff;
   padding: 10px;
 }
+
 .results {
   display: flex;
+}
+
+.results .container {
+  flex: 1;
+}
+
+.results > .container {
+  margin-right: 20px;
+}
+
+.inputContainer {
+  margin-bottom: 20px;
 }

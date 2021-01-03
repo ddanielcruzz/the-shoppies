@@ -32,13 +32,13 @@ export const MovieResults = ({
 
   return (
     <section className={appStyles.container}>
-      <h3>Results for {movieTitle}</h3>
+      <h2>Results for {movieTitle}</h2>
       <ul>
         {movies.map((movie) => {
           const { imdbID, Title, Year, isNominated } = movie;
           return (
             <li key={imdbID}>
-              <h2>{Title}</h2> <p>{Year}</p>
+              <h3>{Title}</h3> <p>{Year}</p>
               <button
                 disabled={isNominated}
                 onClick={() => handleNomination(movie)}
