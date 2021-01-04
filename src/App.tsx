@@ -23,7 +23,6 @@ const fetchMovies: QueryFunction = async ({
   queryKey,
 }: QueryFunctionContext<string[]>) => {
   const [, movieTitle, page] = queryKey;
-  console.log(queryKey);
 
   const res = await fetch(
     `https://www.omdbapi.com/?apikey=${

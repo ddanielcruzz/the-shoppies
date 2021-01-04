@@ -1,0 +1,9 @@
+.paginationButtons {
+  display: flex;
+}
+
+.movieResults {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  row-gap: 20px;
+}

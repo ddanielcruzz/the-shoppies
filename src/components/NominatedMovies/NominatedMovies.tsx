@@ -1,6 +1,8 @@
 import React from "react";
 import { Movie } from "../../App";
+import styles from "./NominatedMovies.module.css";
 import appStyles from "../../App.module.css";
+import moviePosterPlaceholder from "../../assets/images/film-poster-placeholder.png";
 
 interface NominatedMoviesProps {
   movies: Movie[];
@@ -37,13 +39,19 @@ export const NominatedMovies = ({
   return (
     <section className={appStyles.container}>
       <h2>Nominations</h2>
-      <ul>
+      <ul className={styles.movieResults}>
         {nominatedMovies.map((movie) => {
-          const { imdbID, Title, Year, isNominated } = movie;
+          const { imdbID, Title, Year, Poster, isNominated } = movie;
           return (
-            <li key={imdbID}>
+            <li className={appStyles.movieItem} key={imdbID}>
+              <img
+                className={appStyles.moviePoster}
+                src={Poster === "N/A" ? moviePosterPlaceholder : Poster}
+                alt={`Poster from ${Title}`}
+              />
               <h3>{Title}</h3> <p>{Year}</p>
               <button
+                className={appStyles.btnDanger}
                 disabled={!isNominated}
                 onClick={() => handleRemoval(movie)}
               >

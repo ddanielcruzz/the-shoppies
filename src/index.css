@@ -9,11 +9,20 @@ body {
   padding: 50px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+ul {
+  list-style: none;
+  padding: 0;
 }
 
-/* ul {
-  list-style: none;
-} */
+button:disabled {
+  background-color: #e5e5e5;
+  box-shadow: none;
+  color: #acacac;
+  cursor: not-allowed;
+  transition: all 0.1s linear;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(120%) saturate(120%);
+  transition: filter 0.2s ease-in;
+}
