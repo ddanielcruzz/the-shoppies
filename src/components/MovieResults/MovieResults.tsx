@@ -47,14 +47,14 @@ export const MovieResults = ({
         {movies.map((movie) => {
           const { imdbID, Title, Year, Poster, isNominated } = movie;
           return (
-            <li className={appStyles.movieItem} key={imdbID}>
+            <li className={styles.movieItem} key={imdbID}>
               <img
-                className={appStyles.moviePoster}
+                className={styles.moviePoster}
                 src={Poster === "N/A" ? moviePosterPlaceholder : Poster}
                 alt={`Poster from ${Title}`}
               />
-              <h3>
-                {Title} <span>({Year})</span>
+              <h3 className={styles.movieTitle}>
+                {Title} <span className={styles.movieYear}>({Year})</span>
               </h3>
               <button
                 className={appStyles.btnPrimary}

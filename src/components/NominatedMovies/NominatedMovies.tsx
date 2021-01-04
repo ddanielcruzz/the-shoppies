@@ -38,25 +38,32 @@ export const NominatedMovies = ({
 
   return (
     <section className={appStyles.container}>
-      <h2>Nominations</h2>
+      <h2 style={{ color: "white", textDecoration: "underline" }}>
+        Nominations
+      </h2>
       <ul className={styles.movieResults}>
         {nominatedMovies.map((movie) => {
           const { imdbID, Title, Year, Poster, isNominated } = movie;
           return (
-            <li className={appStyles.movieItem} key={imdbID}>
+            <li className={styles.nominatedMovieItem} key={imdbID}>
               <img
-                className={appStyles.moviePoster}
+                className={styles.nominatedMoviePoster}
                 src={Poster === "N/A" ? moviePosterPlaceholder : Poster}
                 alt={`Poster from ${Title}`}
               />
-              <h3>{Title}</h3> <p>{Year}</p>
-              <button
-                className={appStyles.btnDanger}
-                disabled={!isNominated}
-                onClick={() => handleRemoval(movie)}
-              >
-                Remove
-              </button>
+              <section className={styles.nominatedTitleAndYear}>
+                <h3 className={styles.nominatedMovieTitle}>
+                  {Title}{" "}
+                  <span className={styles.nominatedMovieYear}>({Year})</span>
+                </h3>
+                <button
+                  className={appStyles.btnDanger}
+                  disabled={!isNominated}
+                  onClick={() => handleRemoval(movie)}
+                >
+                  Remove
+                </button>
+              </section>
             </li>
           );
         })}

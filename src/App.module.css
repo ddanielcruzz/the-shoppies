@@ -1,6 +1,6 @@
 .container {
   background-color: #ffffff;
-  padding: 10px;
+  padding: 10px 40px;
   border-radius: 5px;
 }
 
@@ -22,8 +22,17 @@
 
   position: sticky;
   top: 20px;
-  max-width: 500px;
+  max-width: 355px;
   min-height: 30vmin;
+  /* background-color: #b7fbed; */
+  /* background-color: #0cc8a1; */
+  background-color: #492af0;
+  transform: translate(-20%, 50px);
+  /* border: 2px #492af0 solid; */
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.02),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.028), 0 12.5px 10px rgba(0, 0, 0, 0.035),
+    0 22.3px 17.9px rgba(0, 0, 0, 0.042), 0 41.8px 33.4px rgba(0, 0, 0, 0.05),
+    0 100px 80px rgba(0, 0, 0, 0.07);
 }
 
 .inputContainer {
@@ -34,7 +43,7 @@
   background-color: #492af0;
   border: none;
   color: #ffffff;
-  padding: 1rem 2rem;
+  padding: 0.8rem 2rem;
   cursor: pointer;
   font-size: 1em;
   border-radius: 5px;
@@ -46,24 +55,8 @@
 .btnDanger {
   composes: btnPrimary;
   background-color: #ff3a1d;
+  padding: 0.5rem 1.5rem;
   box-shadow: 0px 10px 20px rgba(255, 58, 29, 0.18),
     0px 2px 6px rgba(255, 58, 29, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.04);
-}
-
-.moviePoster {
-  box-shadow: 0 0.7px 0.7px rgba(0, 0, 0, 0.02),
-    0 1.7px 1.7px rgba(0, 0, 0, 0.028), 0 3.1px 3.1px rgba(0, 0, 0, 0.035),
-    0 5.6px 5.6px rgba(0, 0, 0, 0.042), 0 10.4px 10.4px rgba(0, 0, 0, 0.05),
-    0 25px 25px rgba(0, 0, 0, 0.07);
-  max-width: 100%;
-  height: 240px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.movieItem {
-  max-width: 160px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  font-size: 1rem;
 }
