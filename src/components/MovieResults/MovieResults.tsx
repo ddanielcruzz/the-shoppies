@@ -48,21 +48,25 @@ export const MovieResults = ({
           const { imdbID, Title, Year, Poster, isNominated } = movie;
           return (
             <li className={styles.movieItem} key={imdbID}>
-              <img
-                className={styles.moviePoster}
-                src={Poster === "N/A" ? moviePosterPlaceholder : Poster}
-                alt={`Poster from ${Title}`}
-              />
+              <article className={styles.posterContainer}>
+                <img
+                  className={styles.moviePoster}
+                  src={Poster === "N/A" ? moviePosterPlaceholder : Poster}
+                  alt={`Poster from ${Title}`}
+                />
+                <article className={styles.buttonContainer}>
+                  <button
+                    className={appStyles.btnPrimary}
+                    disabled={isNominated}
+                    onClick={() => handleNomination(movie)}
+                  >
+                    Nominate
+                  </button>
+                </article>
+              </article>
               <h3 className={styles.movieTitle}>
                 {Title} <span className={styles.movieYear}>({Year})</span>
               </h3>
-              <button
-                className={appStyles.btnPrimary}
-                disabled={isNominated}
-                onClick={() => handleNomination(movie)}
-              >
-                Nominate
-              </button>
             </li>
           );
         })}
