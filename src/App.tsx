@@ -100,10 +100,15 @@ function App() {
             isNominated: false,
           };
         });
+
         setMovies(fetchedMovies);
       },
     }
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedMovieTitle]);
 
   const handleMovieSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const {
