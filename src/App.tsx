@@ -16,6 +16,7 @@ export interface QueryResponse {
   Response: string;
   Search: Movie[];
   totalResults: string;
+  Error?: string;
 }
 // TODO: See how can I type this function
 // TODO: When you add an space it reloads the data, maybe remove react query to have more control of fetching, or maybe it's ok as user may input another word
@@ -88,20 +89,22 @@ function App() {
     {
       keepPreviousData: true,
       onSuccess: (data) => {
-        const fetchedMovies = data.Search.map((movie) => {
-          if (
-            nominatedMovies.find(
-              (nominated) => nominated.imdbID === movie.imdbID
+        if (!data.Error) {
+          const fetchedMovies = data.Search.map((movie) => {
+            if (
+              nominatedMovies.find(
+                (nominated) => nominated.imdbID === movie.imdbID
+              )
             )
-          )
-            return { ...movie, isNominated: true };
-          return {
-            ...movie,
-            isNominated: false,
-          };
-        });
+              return { ...movie, isNominated: true };
+            return {
+              ...movie,
+              isNominated: false,
+            };
+          });
 
-        setMovies(fetchedMovies);
+          setMovies(fetchedMovies);
+        }
       },
     }
   );
@@ -132,6 +135,7 @@ function App() {
       </section>
       <section className={styles.results}>
         <MovieResults
+          data={data}
           movieTitle={movieTitle}
           movies={movies}
           setNominatedMovies={setNominatedMovies}
