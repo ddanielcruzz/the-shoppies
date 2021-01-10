@@ -123,7 +123,12 @@ function App() {
       <h1>The Shoppies</h1>
       <section className={`${styles.container} ${styles.inputContainer}`}>
         <h2>Movie title</h2>
-        <input value={movieTitle} onChange={handleMovieSearch} type="text" />
+        <input
+          className={styles.input}
+          value={movieTitle}
+          onChange={handleMovieSearch}
+          type="text"
+        />
       </section>
       <section className={styles.results}>
         <MovieResults

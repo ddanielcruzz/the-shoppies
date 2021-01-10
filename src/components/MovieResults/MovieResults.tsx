@@ -44,10 +44,14 @@ export const MovieResults = ({
       <h2>Results for {movieTitle}</h2>
 
       <ul className={styles.movieResults}>
-        {movies.map((movie) => {
+        {movies.map((movie, idx) => {
           const { imdbID, Title, Year, Poster, isNominated } = movie;
           return (
-            <li className={styles.movieItem} key={imdbID}>
+            <li
+              style={{ "--index": idx } as React.CSSProperties}
+              className={styles.movieItem}
+              key={imdbID}
+            >
               <article className={styles.posterContainer}>
                 <img
                   className={styles.moviePoster}

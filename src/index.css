@@ -28,8 +28,3 @@ button:disabled {
   cursor: not-allowed;
   transition: all 0.1s linear;
 }
-
-/* button:hover:not(:disabled) {
-  filter: brightness(120%) saturate(120%);
-  transition: filter 0.2s ease-in;
-} */
