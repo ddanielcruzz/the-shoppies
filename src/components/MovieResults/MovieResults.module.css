@@ -4,21 +4,27 @@
 
 .movieResults {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  justify-content: space-between;
   row-gap: 20px;
 }
 
 .movieTitle {
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .movieYear {
   color: #acacac;
   font-weight: normal;
-  font-size: 1rem;
+  font-size: inherit;
 }
 
 .posterContainer {
+  image-rendering: -moz-crisp-edges; /* Firefox */
+  image-rendering: -o-crisp-edges; /* Opera */
+  image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
   position: relative;
   overflow: hidden;
   border-radius: 5px;
@@ -50,11 +56,13 @@
 }
 
 .moviePoster {
-  max-width: 100%;
-  height: 300px;
+  width: 100%;
+  height: 150px;
   object-fit: cover;
   vertical-align: middle;
   transition: transform 400ms;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   transform: scale(1.1);
 }
 
@@ -74,7 +82,7 @@
 
 .movieItem {
   --index: 0;
-  max-width: 200px;
+  max-width: 100px;
   display: flex;
   flex-direction: column;
   opacity: 0;

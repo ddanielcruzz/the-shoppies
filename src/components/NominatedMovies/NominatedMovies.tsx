@@ -37,7 +37,7 @@ export const NominatedMovies = ({
   };
 
   return (
-    <section className={appStyles.container}>
+    <section>
       <h2 style={{ color: "white", textDecoration: "underline" }}>
         Nominations
       </h2>

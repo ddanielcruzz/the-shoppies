@@ -145,35 +145,39 @@ function App() {
         </>
       )}
 
-      <main style={{ padding: 50 }}>
+      <main className={styles.main}>
         <h1>The Shoppies</h1>
-        <section className={`${styles.container} ${styles.inputContainer}`}>
-          <h2>Movie title</h2>
-          <input
-            className={styles.input}
-            value={movieTitle}
-            onChange={handleMovieSearch}
-            type="text"
-          />
-        </section>
         <section className={styles.results}>
-          <MovieResults
-            nominationFinished={nominationFinished}
-            data={data}
-            movieTitle={movieTitle}
-            movies={movies}
-            setNominatedMovies={setNominatedMovies}
-            setMovies={setMovies}
-            setPage={setPage}
-            totalResults={Number(data?.totalResults)}
-            page={page}
-          />
-          <NominatedMovies
-            movies={movies}
-            setMovies={setMovies}
-            nominatedMovies={nominatedMovies}
-            setNominatedMovies={setNominatedMovies}
-          />
+          <section className={styles.leftSide}>
+            <section className={`${styles.container} ${styles.inputContainer}`}>
+              <h2>Movie title</h2>
+              <input
+                className={styles.input}
+                value={movieTitle}
+                onChange={handleMovieSearch}
+                type="text"
+              />
+            </section>
+            <MovieResults
+              nominationFinished={nominationFinished}
+              data={data}
+              movieTitle={movieTitle}
+              movies={movies}
+              setNominatedMovies={setNominatedMovies}
+              setMovies={setMovies}
+              setPage={setPage}
+              totalResults={Number(data?.totalResults)}
+              page={page}
+            />
+          </section>
+          <section className={styles.rightSide}>
+            <NominatedMovies
+              movies={movies}
+              setMovies={setMovies}
+              nominatedMovies={nominatedMovies}
+              setNominatedMovies={setNominatedMovies}
+            />
+          </section>
         </section>
       </main>
     </div>
