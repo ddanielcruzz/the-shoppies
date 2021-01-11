@@ -3,7 +3,7 @@
   flex-direction: column;
 }
 .nominatedMoviePoster {
-  max-width: 70px;
+  max-width: 60px;
   border-radius: 5px;
 
   object-fit: cover;
@@ -17,7 +17,7 @@
 }
 .nominatedMovieTitle {
   margin-bottom: 10px;
-  font-size: 1rem;
+  font-size: 0.7rem;
 }
 
 @keyframes fade-in {
@@ -53,5 +53,4 @@
 .nominatedMovieYear {
   color: #acacac;
   font-weight: normal;
-  font-size: 1rem;
 }

@@ -1,11 +1,12 @@
 .container {
   background-color: #ffffff;
-  padding: 10px 40px;
+  padding: 30px 40px;
   border-radius: 5px;
 }
 
 .main {
-  padding: 0 280px;
+  margin: 0 auto;
+  max-width: min(1000px, 80%);
 }
 
 .results {
@@ -44,7 +45,8 @@
   border-radius: 5px;
   border: 1px solid hsl(249, 86%, 80%);
   transition: box-shadow 200ms ease-out;
-  padding: 0.2rem 0.5rem;
+  padding: 0.5rem 0.5rem;
+  width: 100%;
 }
 
 .input:focus {
@@ -68,10 +70,9 @@
 .btnDanger {
   composes: btnPrimary;
   background-color: #ff3a1d;
-  padding: 0.5rem 1.5rem;
+  font-size: 0.7rem;
   box-shadow: 0px 10px 20px rgba(255, 58, 29, 0.18),
     0px 2px 6px rgba(255, 58, 29, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.04);
-  font-size: 1rem;
 }
 
 @keyframes fade-in {
