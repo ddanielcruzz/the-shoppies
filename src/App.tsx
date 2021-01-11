@@ -42,6 +42,8 @@ function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [movieTitle, setMovieTitle] = useState("blade runner");
   const [nominatedMovies, setNominatedMovies] = useState<Movie[]>([]);
+  const [showBanner, setShowBanner] = useState(false);
+  const [nominationFinished, setNominationFinished] = useState(false);
   const [page, setPage] = useState(1);
   const debouncedMovieTitle = useDebounce(movieTitle, 1000);
 
@@ -54,6 +56,9 @@ function App() {
       const randomInRange = (min: number, max: number) => {
         return Math.random() * (max - min) + min;
       };
+
+      setShowBanner(true);
+      setNominationFinished(true);
 
       const interval: NodeJS.Timeout = setInterval(function () {
         const timeLeft = animationEnd - Date.now();
@@ -79,9 +84,16 @@ function App() {
       }, 250);
       return () => {
         confetti.reset();
+        setShowBanner(false);
       };
     }
   }, [nominatedMovies]);
+
+  useEffect(() => {
+    if (nominationFinished && nominatedMovies.length < 5) {
+      setNominationFinished(false);
+    }
+  }, [nominatedMovies, nominationFinished]);
 
   const { data } = useQuery<unknown, unknown, QueryResponse>(
     ["movies", debouncedMovieTitle, page],
@@ -122,36 +134,49 @@ function App() {
   };
 
   return (
-    <main>
-      <h1>The Shoppies</h1>
-      <section className={`${styles.container} ${styles.inputContainer}`}>
-        <h2>Movie title</h2>
-        <input
-          className={styles.input}
-          value={movieTitle}
-          onChange={handleMovieSearch}
-          type="text"
-        />
-      </section>
-      <section className={styles.results}>
-        <MovieResults
-          data={data}
-          movieTitle={movieTitle}
-          movies={movies}
-          setNominatedMovies={setNominatedMovies}
-          setMovies={setMovies}
-          setPage={setPage}
-          totalResults={Number(data?.totalResults)}
-          page={page}
-        />
-        <NominatedMovies
-          movies={movies}
-          setMovies={setMovies}
-          nominatedMovies={nominatedMovies}
-          setNominatedMovies={setNominatedMovies}
-        />
-      </section>
-    </main>
+    <div>
+      {showBanner && (
+        <>
+          <article className={styles.finishModal}>
+            <button onClick={() => setShowBanner(false)}>&#10005;</button>
+            Congratulations, you finished your nomination
+          </article>
+          <div className={styles.overlay} />
+        </>
+      )}
+
+      <main style={{ padding: 50 }}>
+        <h1>The Shoppies</h1>
+        <section className={`${styles.container} ${styles.inputContainer}`}>
+          <h2>Movie title</h2>
+          <input
+            className={styles.input}
+            value={movieTitle}
+            onChange={handleMovieSearch}
+            type="text"
+          />
+        </section>
+        <section className={styles.results}>
+          <MovieResults
+            nominationFinished={nominationFinished}
+            data={data}
+            movieTitle={movieTitle}
+            movies={movies}
+            setNominatedMovies={setNominatedMovies}
+            setMovies={setMovies}
+            setPage={setPage}
+            totalResults={Number(data?.totalResults)}
+            page={page}
+          />
+          <NominatedMovies
+            movies={movies}
+            setMovies={setMovies}
+            nominatedMovies={nominatedMovies}
+            setNominatedMovies={setNominatedMovies}
+          />
+        </section>
+      </main>
+    </div>
   );
 }
 

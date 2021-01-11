@@ -13,6 +13,7 @@ interface MovieResultsProps {
   setPage: React.Dispatch<React.SetStateAction<number>>;
   totalResults: number;
   page: number;
+  nominationFinished: boolean;
 }
 
 export const MovieResults = ({
@@ -24,6 +25,7 @@ export const MovieResults = ({
   page,
   setPage,
   totalResults,
+  nominationFinished,
 }: MovieResultsProps) => {
   const handleNomination = (movie: Movie) => {
     setMovies(
@@ -67,7 +69,7 @@ export const MovieResults = ({
                     <article className={styles.buttonContainer}>
                       <button
                         className={appStyles.btnPrimary}
-                        disabled={isNominated}
+                        disabled={isNominated || nominationFinished}
                         onClick={() => handleNomination(movie)}
                       >
                         Nominate

@@ -73,3 +73,42 @@
     0px 2px 6px rgba(255, 58, 29, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.04);
   font-size: 1rem;
 }
+
+@keyframes fade-in {
+  30% {
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.finishModal {
+  background-color: #ffffff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  padding: 2em 2rem;
+  border-radius: 5px;
+  opacity: 0;
+  transform: translate(-50%, -35%);
+  animation: fade-in 500ms ease-out 200ms forwards;
+}
+
+@keyframes show {
+  100% {
+    opacity: 1;
+  }
+}
+
+.overlay {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  z-index: 4;
+  background-color: hsla(120, 0%, 0%, 0.5);
+  opacity: 0;
+  animation: show 500ms ease-out forwards;
+}
