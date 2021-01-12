@@ -20,6 +20,7 @@
 
 .movieTitle {
   font-size: 0.8rem;
+  margin-top: 10px;
 }
 
 .movieYear {
@@ -104,7 +105,7 @@
   border-radius: 5px;
   cursor: pointer;
   border: none;
-  background-color: hsla(var(--main-purple), 0.7);
+  background-color: hsl(var(--main-purple));
   color: #ffffff;
   padding: 0.2em 1em;
 }

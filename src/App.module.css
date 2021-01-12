@@ -10,6 +10,10 @@
   margin-bottom: 5vmin;
 }
 
+.title {
+  margin: 5vmin 0 0;
+}
+
 .instructions {
   margin: 20px 0;
 }
@@ -72,6 +76,14 @@
   transition: filter 0.2s ease-out;
 }
 
+.btnPrimaryGhost {
+  composes: btnPrimary;
+  background-color: #ffffff;
+  border: 1px solid hsl(var(--main-purple));
+  color: hsl(var(--main-purple));
+  box-shadow: none;
+}
+
 .btnDanger {
   composes: btnPrimary;
   background-color: #ff3a1d;
@@ -101,6 +113,13 @@
   opacity: 0;
   transform: translate(-50%, -35%);
   animation: fade-in 500ms ease-out 200ms forwards;
+}
+
+.modalBtns {
+  margin: 20px 0 0;
+}
+.modalBtns .btnPrimary {
+  margin-right: 10px;
 }
 
 @keyframes show {

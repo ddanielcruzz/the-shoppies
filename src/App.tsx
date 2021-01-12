@@ -144,28 +144,45 @@ function App() {
     setMovieTitle(value);
   };
 
-  console.log({ isLoading });
-
   return (
     <div>
       {showBanner && (
         <>
           <article className={styles.finishModal}>
-            <button onClick={() => setShowBanner(false)}>&#10005;</button>
-            Congratulations, you finished your nomination
+            <h2>Congratulations! 🎉 🎊</h2>
+            <h2>You finished your nomination</h2>
+            <div className={styles.modalBtns}>
+              <button
+                className={styles.btnPrimary}
+                onClick={() => {
+                  setShowBanner(false);
+                  setMovieTitle("");
+                  setMovies([]);
+                  setNominatedMovies([]);
+                }}
+              >
+                Submit nominations
+              </button>
+              <button
+                className={styles.btnPrimaryGhost}
+                onClick={() => setShowBanner(false)}
+              >
+                Edit nominations
+              </button>
+            </div>
           </article>
           <div className={styles.overlay} />
         </>
       )}
 
       <main className={styles.main}>
-        <h1>The Shoppies 🏆🍿</h1>
+        <h1 className={styles.title}>The Shoppies 🏆🍿</h1>
         <section className={styles.instructions}>
           <h3>How to use:</h3>
           <ol>
             <li>Use the search bar to look for your favorite movies 🔎</li>
             <li>Hover over the poster to show the nomination button ⭐️</li>
-            <li>After 5 nominations submit the list 🚀</li>
+            <li>After 5 nominations submit or edit the list 🚀</li>
           </ol>
         </section>
         <section className={styles.results}>
