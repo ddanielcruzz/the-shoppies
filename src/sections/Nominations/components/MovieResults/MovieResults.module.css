@@ -91,14 +91,14 @@
 }
 
 .movieItem {
-  /* --index: 0; */
+  --index: 0;
   max-width: 100px;
   display: flex;
   flex-direction: column;
   opacity: 0;
   transform: translate3d(0, 15%, 0);
   animation: fadeInMovie 3s cubic-bezier(0.22, 1, 0.36, 1)
-    calc(80ms * var(--index)) forwards;
+    calc(0ms + var(--index) * 80ms) forwards;
 }
 
 .paginationBtn {
