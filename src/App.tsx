@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styles from "./App.module.css";
 import { QueryFunction, QueryFunctionContext, useQuery } from "react-query";
 import { useDebounce } from "./lib/hooks/useDebounce";
@@ -40,7 +40,8 @@ const fetchMovies: QueryFunction = async ({
 
 function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [movieTitle, setMovieTitle] = useState("blade runner");
+  const [movieTitle, setMovieTitle] = useState("");
+  const [localLoading, setLocalLoading] = useState(false);
   const [nominatedMovies, setNominatedMovies] = useState<Movie[]>([]);
   const [showBanner, setShowBanner] = useState(false);
   const [nominationFinished, setNominationFinished] = useState(false);
@@ -95,43 +96,55 @@ function App() {
     }
   }, [nominatedMovies, nominationFinished]);
 
-  const { data } = useQuery<unknown, unknown, QueryResponse>(
-    ["movies", debouncedMovieTitle, page],
-    fetchMovies,
-    {
-      keepPreviousData: true,
-      onSuccess: (data) => {
-        if (!data.Error) {
-          const fetchedMovies = data.Search.map((movie) => {
-            if (
-              nominatedMovies.find(
-                (nominated) => nominated.imdbID === movie.imdbID
-              )
+  const { data, refetch, isLoading } = useQuery<
+    unknown,
+    unknown,
+    QueryResponse
+  >(["movies", debouncedMovieTitle, page], fetchMovies, {
+    keepPreviousData: true,
+    onSuccess: (data) => {
+      if (!data.Error) {
+        const fetchedMovies = data.Search.map((movie) => {
+          if (
+            nominatedMovies.find(
+              (nominated) => nominated.imdbID === movie.imdbID
             )
-              return { ...movie, isNominated: true };
-            return {
-              ...movie,
-              isNominated: false,
-            };
-          });
+          )
+            return { ...movie, isNominated: true };
+          return {
+            ...movie,
+            isNominated: false,
+          };
+        });
 
-          setMovies(fetchedMovies);
-        }
-      },
-    }
-  );
+        setMovies(fetchedMovies);
+      }
+    },
+    enabled: false,
+  });
+
+  const refetchCb = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  useEffect(() => {
+    if (debouncedMovieTitle) refetchCb();
+  }, [debouncedMovieTitle, refetchCb, page]);
 
   useEffect(() => {
     setPage(1);
+    setLocalLoading(false);
   }, [debouncedMovieTitle]);
 
   const handleMovieSearch = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { value },
     } = evt;
-
+    setLocalLoading(true);
     setMovieTitle(value);
   };
+
+  console.log({ isLoading });
 
   return (
     <div>
@@ -146,19 +159,29 @@ function App() {
       )}
 
       <main className={styles.main}>
-        <h1>The Shoppies</h1>
+        <h1>The Shoppies 🏆🍿</h1>
+        <section className={styles.instructions}>
+          <h3>How to use:</h3>
+          <ol>
+            <li>Use the search bar to look for your favorite movies 🔎</li>
+            <li>Hover over the poster to show the nomination button ⭐️</li>
+            <li>After 5 nominations submit the list 🚀</li>
+          </ol>
+        </section>
         <section className={styles.results}>
           <section className={styles.leftSide}>
             <section className={`${styles.container} ${styles.inputContainer}`}>
-              <h2>Movie title</h2>
+              <h2>Search movie title</h2>
               <input
                 className={styles.input}
                 value={movieTitle}
                 onChange={handleMovieSearch}
                 type="text"
+                placeholder="Blade Runner"
               />
             </section>
             <MovieResults
+              isLoading={isLoading || localLoading}
               nominationFinished={nominationFinished}
               data={data}
               movieTitle={movieTitle}

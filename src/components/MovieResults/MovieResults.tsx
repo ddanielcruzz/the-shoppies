@@ -14,6 +14,7 @@ interface MovieResultsProps {
   totalResults: number;
   page: number;
   nominationFinished: boolean;
+  isLoading: boolean;
 }
 
 export const MovieResults = ({
@@ -26,6 +27,7 @@ export const MovieResults = ({
   setPage,
   totalResults,
   nominationFinished,
+  isLoading,
 }: MovieResultsProps) => {
   const handleNomination = (movie: Movie) => {
     setMovies(
@@ -47,7 +49,11 @@ export const MovieResults = ({
     <section className={appStyles.container}>
       <h2>Results for {movieTitle}</h2>
 
-      {data?.Error ? (
+      {isLoading ? (
+        <div className={styles.loadContainer}>
+          <div className={appStyles.dotFlashing} />
+        </div>
+      ) : data?.Error ? (
         <h2>{data.Error}</h2>
       ) : (
         <>
@@ -83,26 +89,30 @@ export const MovieResults = ({
               );
             })}
           </ul>
-          <section className={styles.paginationButtons}>
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            >
-              prev
-            </button>
-            <p>{page}</p>
-            <button
-              // Comment: operation , make variable
-              disabled={!(totalResults - 10 * page > 0)}
-              onClick={() =>
-                setPage((prev) =>
-                  totalResults - 10 * prev > 0 ? prev + 1 : prev
-                )
-              }
-            >
-              next
-            </button>
-          </section>
+          {totalResults > 10 && (
+            <section className={styles.paginationButtons}>
+              <button
+                className={styles.paginationBtn}
+                disabled={page === 1}
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              >
+                prev
+              </button>
+              <p>{page}</p>
+              <button
+                className={styles.paginationBtn}
+                // Note: operation , make variable
+                disabled={!(totalResults - 10 * page > 0)}
+                onClick={() =>
+                  setPage((prev) =>
+                    totalResults - 10 * prev > 0 ? prev + 1 : prev
+                  )
+                }
+              >
+                next
+              </button>
+            </section>
+          )}
         </>
       )}
     </section>

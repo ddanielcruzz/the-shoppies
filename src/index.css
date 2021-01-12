@@ -14,6 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ebebeb;
+  --main-purple: 249, 86%, 55%;
 }
 
 h1,

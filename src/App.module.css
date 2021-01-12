@@ -7,6 +7,11 @@
 .main {
   margin: 0 auto;
   max-width: min(1000px, 80%);
+  margin-bottom: 5vmin;
+}
+
+.instructions {
+  margin: 20px 0;
 }
 
 .results {
@@ -28,7 +33,7 @@
   top: 20px;
   max-width: 355px;
   min-height: 30vmin;
-  background-color: hsl(249, 86%, 55%);
+  background-color: hsl(var(--main-purple));
   /* transform: translate(-15%, 50px); */
   box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.02),
     0 6.7px 5.3px rgba(0, 0, 0, 0.028), 0 12.5px 10px rgba(0, 0, 0, 0.035),
@@ -112,4 +117,56 @@
   background-color: hsla(120, 0%, 0%, 0.5);
   opacity: 0;
   animation: show 500ms ease-out forwards;
+}
+
+/* Loading dot CSS from https://github.com/nzbin/three-dots*/
+.dotFlashing {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+}
+
+.dotFlashing::before,
+.dotFlashing::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dotFlashing::before {
+  left: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dotFlashing::after {
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #9880ff;
+  }
+  50%,
+  100% {
+    background-color: #ebe6ff;
+  }
 }
