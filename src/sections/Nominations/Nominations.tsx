@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { QueryFunction, QueryFunctionContext, useQuery } from "react-query";
 import { MovieResults, NominatedMovies } from "./components";
 import { useDebounce } from "../../lib/hooks/useDebounce";
+import appStyles from "../../App.module.css";
 import styles from "./Nominations.module.css";
 
 export interface Movie {
@@ -152,7 +153,7 @@ export const Nominations = () => {
             <h2>You finished your nomination</h2>
             <div className={styles.modalBtns}>
               <button
-                className={styles.btnPrimary}
+                className={appStyles.btnPrimary}
                 onClick={() => {
                   setShowBanner(false);
                   setMovieTitle("");
@@ -163,7 +164,7 @@ export const Nominations = () => {
                 Submit nominations
               </button>
               <button
-                className={styles.btnPrimaryGhost}
+                className={appStyles.btnPrimaryGhost}
                 onClick={() => setShowBanner(false)}
               >
                 Edit nominations
@@ -186,7 +187,9 @@ export const Nominations = () => {
         </section>
         <section className={styles.results}>
           <section className={styles.leftSide}>
-            <section className={`${styles.container} ${styles.inputContainer}`}>
+            <section
+              className={`${appStyles.container} ${styles.inputContainer}`}
+            >
               <h2>Search movie title</h2>
               <input
                 className={styles.input}

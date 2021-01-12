@@ -4,65 +4,6 @@
   border-radius: 5px;
 }
 
-.main {
-  margin: 0 auto;
-  max-width: min(1000px, 80%);
-  margin-bottom: 5vmin;
-}
-
-.title {
-  margin: 5vmin 0 0;
-}
-
-.instructions {
-  margin: 20px 0;
-}
-
-.results {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.leftSide {
-  flex: 1;
-  margin-right: 20px;
-}
-
-.rightSide {
-  flex-basis: 300px;
-  padding: 10px 40px;
-  border-radius: 5px;
-  align-self: flex-start;
-  position: sticky;
-  top: 20px;
-  max-width: 355px;
-  min-height: 30vmin;
-  background-color: hsl(var(--main-purple));
-  /* transform: translate(-15%, 50px); */
-  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.02),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.028), 0 12.5px 10px rgba(0, 0, 0, 0.035),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.042), 0 41.8px 33.4px rgba(0, 0, 0, 0.05),
-    0 100px 80px rgba(0, 0, 0, 0.07);
-}
-
-.inputContainer {
-  margin-bottom: 20px;
-}
-
-.input {
-  font-family: "Open Sans", sans-serif;
-  border-radius: 5px;
-  border: 1px solid hsl(249, 86%, 80%);
-  transition: box-shadow 200ms ease-out;
-  padding: 0.5rem 0.5rem;
-  width: 100%;
-}
-
-.input:focus {
-  outline: none;
-  box-shadow: 0 0 0px 1px hsl(249, 86%, 55%);
-}
-
 .btnPrimary {
   background-color: #492af0;
   border: none;
@@ -90,52 +31,6 @@
   font-size: 0.7rem;
   box-shadow: 0px 10px 20px rgba(255, 58, 29, 0.18),
     0px 2px 6px rgba(255, 58, 29, 0.12), 0px 0px 1px rgba(0, 0, 0, 0.04);
-}
-
-@keyframes fade-in {
-  30% {
-    transform: translate(-50%, -50%);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-.finishModal {
-  background-color: #ffffff;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  z-index: 5;
-  padding: 2em 2rem;
-  border-radius: 5px;
-  opacity: 0;
-  transform: translate(-50%, -35%);
-  animation: fade-in 500ms ease-out 200ms forwards;
-}
-
-.modalBtns {
-  margin: 20px 0 0;
-}
-.modalBtns .btnPrimary {
-  margin-right: 10px;
-}
-
-@keyframes show {
-  100% {
-    opacity: 1;
-  }
-}
-
-.overlay {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  z-index: 4;
-  background-color: hsla(120, 0%, 0%, 0.5);
-  opacity: 0;
-  animation: show 500ms ease-out forwards;
 }
 
 /* Loading dot CSS from https://github.com/nzbin/three-dots*/

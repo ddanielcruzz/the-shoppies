@@ -54,3 +54,18 @@
   color: #acacac;
   font-weight: normal;
 }
+
+.emptySection {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emptyIcon {
+  width: 30%;
+  height: 30%;
+}
+.emptyText {
+  color: #ffffff;
+}

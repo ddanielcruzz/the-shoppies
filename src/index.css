@@ -8,6 +8,13 @@ html {
   box-sizing: inherit;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;

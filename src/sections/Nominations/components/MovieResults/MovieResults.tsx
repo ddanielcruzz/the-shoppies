@@ -1,6 +1,6 @@
 import React from "react";
 import { Movie, QueryResponse } from "../../Nominations";
-import appStyles from "../../Nominations.module.css";
+import appStyles from "../../../../App.module.css";
 import styles from "./MovieResults.module.css";
 import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
 
