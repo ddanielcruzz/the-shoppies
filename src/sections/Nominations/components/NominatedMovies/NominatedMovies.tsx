@@ -1,8 +1,8 @@
 import React from "react";
-import { Movie } from "../../App";
+import { Movie } from "../../Nominations";
 import styles from "./NominatedMovies.module.css";
-import appStyles from "../../App.module.css";
-import moviePosterPlaceholder from "../../assets/images/film-poster-placeholder.png";
+import appStyles from "../../Nominations.module.css";
+import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
 
 interface NominatedMoviesProps {
   movies: Movie[];

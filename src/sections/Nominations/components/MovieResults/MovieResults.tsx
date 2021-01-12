@@ -1,8 +1,8 @@
 import React from "react";
-import { Movie, QueryResponse } from "../../App";
-import appStyles from "../../App.module.css";
+import { Movie, QueryResponse } from "../../Nominations";
+import appStyles from "../../Nominations.module.css";
 import styles from "./MovieResults.module.css";
-import moviePosterPlaceholder from "../../assets/images/film-poster-placeholder.png";
+import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
 
 interface MovieResultsProps {
   data?: QueryResponse;
