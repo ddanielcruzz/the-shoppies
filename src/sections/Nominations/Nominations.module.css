@@ -18,7 +18,7 @@
 }
 
 .leftSide {
-  flex: 1;
+  flex: 1 1 400px;
   margin-right: 20px;
 }
 
@@ -103,4 +103,21 @@
   animation: show 500ms ease-out forwards;
   top: 0;
   bottom: 0;
+}
+
+@media screen and (max-width: 880px) {
+  .leftSide {
+    margin-right: 0;
+  }
+  .rightSide {
+    margin-top: 20px;
+    flex-grow: 1;
+    max-width: none;
+  }
+}
+
+@media screen and (max-width: 695px) {
+  .modalBtns button:nth-child(1) {
+    margin-bottom: 15px;
+  }
 }

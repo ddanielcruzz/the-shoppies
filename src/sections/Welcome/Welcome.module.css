@@ -24,6 +24,8 @@
   opacity: 0;
   transform: translateY(50%);
   animation: fadeIn 1500ms ease-out forwards;
+  text-align: center;
+  width: min(500px, 90%);
 }
 
 .description {
