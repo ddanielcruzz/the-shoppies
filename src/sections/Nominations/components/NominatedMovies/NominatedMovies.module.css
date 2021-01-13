@@ -55,6 +55,18 @@
   font-weight: normal;
 }
 
+.submitBtn {
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  background-color: transparent;
+  margin-bottom: 10px;
+}
+
 .emptySection {
   margin-top: 40px;
   display: flex;

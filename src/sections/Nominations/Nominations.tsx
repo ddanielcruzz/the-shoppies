@@ -218,6 +218,8 @@ export const Nominations = () => {
               setMovies={setMovies}
               nominatedMovies={nominatedMovies}
               setNominatedMovies={setNominatedMovies}
+              setShowBanner={setShowBanner}
+              setMovieTitle={setMovieTitle}
             />
           </section>
         </section>
