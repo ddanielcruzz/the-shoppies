@@ -1,14 +1,14 @@
 import React from "react";
-import { Movie, MoviesAction, QueryResponse } from "../../Nominations";
+import { Movie, MoviesState, QueryResponse } from "../../Nominations";
+import { MoviesAction } from "../../reducers";
 import appStyles from "../../../../App.module.css";
 import styles from "./MovieResults.module.css";
 import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
 
 interface MovieResultsProps {
   data?: QueryResponse;
-  movieTitle?: string;
+  moviesState: MoviesState;
   dispatch: React.Dispatch<MoviesAction>;
-  movies: Movie[];
   setPage: React.Dispatch<React.SetStateAction<number>>;
   totalResults: number;
   page: number;
@@ -18,8 +18,7 @@ interface MovieResultsProps {
 
 export const MovieResults = ({
   data,
-  movieTitle,
-  movies,
+  moviesState: { movieTitle, movies },
   dispatch,
   page,
   setPage,
@@ -28,19 +27,8 @@ export const MovieResults = ({
   isLoading,
 }: MovieResultsProps) => {
   const handleNomination = (movie: Movie) => {
-    const updatedMovies = movies.map((outMovie) => {
-      if (outMovie.imdbID === movie.imdbID) {
-        return {
-          ...outMovie,
-          isNominated: true,
-        };
-      }
-      return outMovie;
-    });
-
     dispatch({
       type: "addNominatedMovie",
-      movies: updatedMovies,
       nominatedMovie: movie,
     });
   };

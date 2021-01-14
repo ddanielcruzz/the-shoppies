@@ -1,43 +1,27 @@
 import React from "react";
-import { Movie, MoviesAction } from "../../Nominations";
-import styles from "./NominatedMovies.module.css";
-import appStyles from "../../../../App.module.css";
+import { Movie } from "../../Nominations";
+import { MoviesAction } from "../../reducers";
 import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
 import { ReactComponent as EmptyIcon } from "../../../../assets/svg/empty.svg";
+import appStyles from "../../../../App.module.css";
+import styles from "./NominatedMovies.module.css";
 
 // Empty icon from <div>Icons made by "https://www.flaticon.com/authors/pixel-perfect"
 interface NominatedMoviesProps {
-  movies: Movie[];
   nominatedMovies: Movie[];
   dispatch: React.Dispatch<MoviesAction>;
   setShowBanner: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const NominatedMovies = ({
-  movies,
   nominatedMovies,
   setShowBanner,
   dispatch,
 }: NominatedMoviesProps) => {
-  const handleRemoval = (movie: Movie) => {
-    const updatedMovies = movies.map((outMovie) => {
-      if (outMovie.imdbID === movie.imdbID) {
-        return {
-          ...outMovie,
-          isNominated: false,
-        };
-      }
-      return outMovie;
-    });
-
-    const updatedNominatedMovies = nominatedMovies.filter(
-      (nominatedMovie) => nominatedMovie.imdbID !== movie.imdbID
-    );
-
+  const handleRemoval = (nominatedMovieId: Movie["imdbID"]) => {
     dispatch({
       type: "removeNominatedMovie",
-      movies: updatedMovies,
-      nominatedMovies: updatedNominatedMovies,
+      nominatedMovieId,
     });
   };
 
@@ -50,9 +34,8 @@ export const NominatedMovies = ({
       {nominatedMovies.length > 0 ? (
         <>
           <ul className={styles.movieResults}>
-            {nominatedMovies.map((movie) => {
-              const { imdbID, Title, Year, Poster, isNominated } = movie;
-              return (
+            {nominatedMovies.map(
+              ({ imdbID, Title, Year, Poster, isNominated }) => (
                 <li className={styles.nominatedMovieItem} key={imdbID}>
                   <img
                     className={styles.nominatedMoviePoster}
@@ -69,23 +52,21 @@ export const NominatedMovies = ({
                     <button
                       className={appStyles.btnDanger}
                       disabled={!isNominated}
-                      onClick={() => handleRemoval(movie)}
+                      onClick={() => handleRemoval(imdbID)}
                     >
                       Remove
                     </button>
                   </section>
                 </li>
-              );
-            })}
+              )
+            )}
           </ul>
+          {/* TODO: Maybe use is nomination finished here */}
           {nominatedMovies.length === 5 && (
             <button
               onClick={() => {
                 setShowBanner(false);
-                // Continue improvement
-                // setMovieTitle("");
-                // setMovies([]);
-                // setNominatedMovies([]);
+                dispatch({ type: "resetMovieState" });
               }}
               className={styles.submitBtn}
             >
