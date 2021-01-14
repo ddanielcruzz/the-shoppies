@@ -3,7 +3,6 @@ import { Movie, MoviesState } from "..";
 export type MoviesAction =
   | { type: "updateMovieTitle"; title: string }
   | { type: "updateMovies"; movies: Movie[] }
-  | { type: "updateNominatedMovies"; nominatedMovies: Movie[] }
   | { type: "addNominatedMovie"; nominatedMovie: Movie }
   | { type: "removeNominatedMovie"; nominatedMovieId: Movie["imdbID"] }
   | { type: "resetMovieState" };
@@ -17,8 +16,6 @@ export const moviesReducer = (
       return { ...state, movieTitle: action.title };
     case "updateMovies":
       return { ...state, movies: action.movies };
-    case "updateNominatedMovies":
-      return { ...state, nominatedMovies: action.nominatedMovies };
     case "addNominatedMovie": {
       return {
         ...state,
