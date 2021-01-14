@@ -7,7 +7,7 @@
 }
 
 @keyframes fadeIn {
-  30% {
+  40% {
     transform: translateY(0);
   }
   100% {
@@ -22,8 +22,8 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transform: translateY(50%);
-  animation: fadeIn 1500ms ease-out forwards;
+  transform: translateY(150%);
+  animation: fadeIn 3000ms cubic-bezier(0, 0.55, 0.45, 1) forwards;
   text-align: center;
   width: min(500px, 90%);
 }
