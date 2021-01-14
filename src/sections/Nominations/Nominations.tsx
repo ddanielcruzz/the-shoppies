@@ -27,6 +27,11 @@ export interface QueryResponse {
   Error?: string;
 }
 
+export interface Metadata {
+  moviesError: string | undefined;
+  totalResults: number;
+}
+
 const moviesInitialState = {
   movies: [],
   nominatedMovies: [],
@@ -139,38 +144,41 @@ export const Nominations = () => {
     dispatch({ type: "updateMovieTitle", title: value });
   };
 
+  const metadata: Metadata = {
+    moviesError: data?.Error,
+    totalResults: Number(data?.totalResults),
+  };
+
+  const bannerJSX = (
+    <>
+      <article className={styles.finishModal}>
+        <h2>Congratulations! 🎉 🎊</h2>
+        <h2>You finished your nomination</h2>
+        <div className={styles.modalBtns}>
+          <button
+            className={appStyles.btnPrimary}
+            onClick={() => {
+              setShowBanner(false);
+              dispatch({ type: "resetMovieState" });
+            }}
+          >
+            Submit nominations
+          </button>
+          <button
+            className={appStyles.btnPrimaryGhost}
+            onClick={() => setShowBanner(false)}
+          >
+            Edit nominations
+          </button>
+        </div>
+      </article>
+      <div className={styles.overlay} />
+    </>
+  );
+
   return (
     <div>
-      {showBanner && (
-        <>
-          <article className={styles.finishModal}>
-            <h2>Congratulations! 🎉 🎊</h2>
-            <h2>You finished your nomination</h2>
-            <div className={styles.modalBtns}>
-              <button
-                className={appStyles.btnPrimary}
-                onClick={() => {
-                  setShowBanner(false);
-                  // Continue improvement
-                  // setMovieTitle("");
-                  // setMovies([]);
-                  // setNominatedMovies([]);
-                }}
-              >
-                Submit nominations
-              </button>
-              <button
-                className={appStyles.btnPrimaryGhost}
-                onClick={() => setShowBanner(false)}
-              >
-                Edit nominations
-              </button>
-            </div>
-          </article>
-          <div className={styles.overlay} />
-        </>
-      )}
-
+      {showBanner && bannerJSX}
       <main className={styles.main}>
         <h1 className={styles.title}>The Shoppies 🏆🍿</h1>
         <section className={styles.instructions}>
@@ -197,13 +205,10 @@ export const Nominations = () => {
             </section>
             <MovieResults
               isLoading={isLoading || localLoading}
-              nominationFinished={nominationFinished}
-              data={data}
+              metadata={metadata}
               moviesState={moviesState}
               dispatch={dispatch}
-              setPage={setPage}
-              totalResults={Number(data?.totalResults)}
-              page={page}
+              pageState={{ page, setPage }}
             />
           </section>
           <section className={styles.rightSide}>
