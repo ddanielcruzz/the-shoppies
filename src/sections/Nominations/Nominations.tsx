@@ -41,7 +41,6 @@ const moviesInitialState = {
 export const Nominations = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
-  const [nominationFinished, setNominationFinished] = useState(false);
   const [page, setPage] = useState(1);
 
   const [moviesState, dispatch] = useReducer(moviesReducer, moviesInitialState);
@@ -60,7 +59,6 @@ export const Nominations = () => {
       };
 
       setShowBanner(true);
-      setNominationFinished(true);
 
       const interval: NodeJS.Timeout = setInterval(function () {
         const timeLeft = animationEnd - Date.now();
@@ -91,12 +89,6 @@ export const Nominations = () => {
     }
   }, [nominatedMovies]);
 
-  useEffect(() => {
-    if (nominationFinished && nominatedMovies.length < 5) {
-      setNominationFinished(false);
-    }
-  }, [nominatedMovies, nominationFinished]);
-
   const { data, refetch, isLoading } = useQuery<
     unknown,
     unknown,
@@ -105,18 +97,14 @@ export const Nominations = () => {
     keepPreviousData: true,
     onSuccess: (data) => {
       if (!data.Error) {
-        const fetchedMovies = data.Search.map((movie) => {
-          if (
-            nominatedMovies.find(
-              (nominated) => nominated.imdbID === movie.imdbID
-            )
-          )
-            return { ...movie, isNominated: true };
-          return {
-            ...movie,
-            isNominated: false,
-          };
-        });
+        const fetchedMovies = data.Search.map((movie) =>
+          nominatedMovies.find((nominated) => nominated.imdbID === movie.imdbID)
+            ? { ...movie, isNominated: true }
+            : {
+                ...movie,
+                isNominated: false,
+              }
+        );
         dispatch({ type: "updateMovies", movies: fetchedMovies });
       }
     },
