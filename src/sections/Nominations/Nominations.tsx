@@ -54,7 +54,7 @@ export type MoviesAction =
   | { type: "updateMovieTitle"; title: string }
   | { type: "updateMovies"; movies: Movie[] }
   | { type: "updateNominatedMovies"; nominatedMovies: Movie[] }
-  | { type: "addNominatedMovie"; nominatedMovies: Movie[]; movies: Movie[] }
+  | { type: "addNominatedMovie"; nominatedMovie: Movie; movies: Movie[] }
   | { type: "removeNominatedMovie"; nominatedMovies: Movie[]; movies: Movie[] };
 
 const moviesReducer = (
@@ -68,13 +68,19 @@ const moviesReducer = (
       return { ...state, movies: action.movies };
     case "updateNominatedMovies":
       return { ...state, nominatedMovies: action.nominatedMovies };
-    case "removeNominatedMovie":
+    case "addNominatedMovie": {
+      console.log("corrió", action.nominatedMovie);
       return {
         ...state,
-        nominatedMovies: action.nominatedMovies,
+        nominatedMovies: [
+          ...state.nominatedMovies,
+          { ...action.nominatedMovie, isNominated: true },
+        ],
+
         movies: action.movies,
       };
-    case "addNominatedMovie":
+    }
+    case "removeNominatedMovie":
       return {
         ...state,
         nominatedMovies: action.nominatedMovies,

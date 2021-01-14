@@ -38,9 +38,11 @@ export const MovieResults = ({
       return outMovie;
     });
 
-    dispatch({ type: "addNominatedMovie", movies: updatedMovies });
-
-    setNominatedMovies((prev) => [...prev, { ...movie, isNominated: true }]);
+    dispatch({
+      type: "addNominatedMovie",
+      movies: updatedMovies,
+      nominatedMovie: movie,
+    });
   };
 
   return (
