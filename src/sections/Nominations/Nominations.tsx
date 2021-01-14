@@ -1,5 +1,5 @@
 import confetti from "canvas-confetti";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { QueryFunction, QueryFunctionContext, useQuery } from "react-query";
 import { MovieResults, NominatedMovies } from "./components";
 import { useDebounce } from "../../lib/hooks/useDebounce";
@@ -38,18 +38,68 @@ const fetchMovies: QueryFunction = async ({
   return res.json();
 };
 
+interface MoviesState {
+  movies: Movie[];
+  nominatedMovies: Movie[];
+  movieTitle: string;
+}
+
+const moviesInitialState = {
+  movies: [],
+  nominatedMovies: [],
+  movieTitle: "",
+};
+
+export type MoviesAction =
+  | { type: "updateMovieTitle"; title: string }
+  | { type: "updateMovies"; movies: Movie[] }
+  | { type: "updateNominatedMovies"; nominatedMovies: Movie[] }
+  | { type: "addNominatedMovie"; nominatedMovies: Movie[]; movies: Movie[] }
+  | { type: "removeNominatedMovie"; nominatedMovies: Movie[]; movies: Movie[] };
+
+const moviesReducer = (
+  state: MoviesState,
+  action: MoviesAction
+): MoviesState => {
+  switch (action.type) {
+    case "updateMovieTitle":
+      return { ...state, movieTitle: action.title };
+    case "updateMovies":
+      return { ...state, movies: action.movies };
+    case "updateNominatedMovies":
+      return { ...state, nominatedMovies: action.nominatedMovies };
+    case "removeNominatedMovie":
+      return {
+        ...state,
+        nominatedMovies: action.nominatedMovies,
+        movies: action.movies,
+      };
+    case "addNominatedMovie":
+      return {
+        ...state,
+        nominatedMovies: action.nominatedMovies,
+        movies: action.movies,
+      };
+    default:
+      return state;
+  }
+};
+
 export const Nominations = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [movieTitle, setMovieTitle] = useState("");
+  // const [movies, setMovies] = useState<Movie[]>([]);
+  // const [movieTitle, setMovieTitle] = useState("");
   const [localLoading, setLocalLoading] = useState(false);
-  const [nominatedMovies, setNominatedMovies] = useState<Movie[]>([]);
+  // const [nominatedMovies, setNominatedMovies] = useState<Movie[]>([]);
   const [showBanner, setShowBanner] = useState(false);
   const [nominationFinished, setNominationFinished] = useState(false);
   const [page, setPage] = useState(1);
-  const debouncedMovieTitle = useDebounce(movieTitle, 1000);
+
+  const [moviesState, dispatch] = useReducer(moviesReducer, moviesInitialState);
+
+  const debouncedMovieTitle = useDebounce(moviesState.movieTitle, 1000);
 
   useEffect(() => {
-    if (nominatedMovies.length > 4) {
+    if (moviesState.nominatedMovies.length > 4) {
       const duration = 5 * 1000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -88,13 +138,13 @@ export const Nominations = () => {
         setShowBanner(false);
       };
     }
-  }, [nominatedMovies]);
+  }, [moviesState.nominatedMovies]);
 
   useEffect(() => {
-    if (nominationFinished && nominatedMovies.length < 5) {
+    if (nominationFinished && moviesState.nominatedMovies.length < 5) {
       setNominationFinished(false);
     }
-  }, [nominatedMovies, nominationFinished]);
+  }, [moviesState.nominatedMovies, nominationFinished]);
 
   const { data, refetch, isLoading } = useQuery<
     unknown,
@@ -106,7 +156,7 @@ export const Nominations = () => {
       if (!data.Error) {
         const fetchedMovies = data.Search.map((movie) => {
           if (
-            nominatedMovies.find(
+            moviesState.nominatedMovies.find(
               (nominated) => nominated.imdbID === movie.imdbID
             )
           )
@@ -116,8 +166,7 @@ export const Nominations = () => {
             isNominated: false,
           };
         });
-
-        setMovies(fetchedMovies);
+        dispatch({ type: "updateMovies", movies: fetchedMovies });
       }
     },
     enabled: false,
@@ -141,7 +190,7 @@ export const Nominations = () => {
       target: { value },
     } = evt;
     setLocalLoading(true);
-    setMovieTitle(value);
+    dispatch({ type: "updateMovieTitle", title: value });
   };
 
   return (
@@ -156,9 +205,10 @@ export const Nominations = () => {
                 className={appStyles.btnPrimary}
                 onClick={() => {
                   setShowBanner(false);
-                  setMovieTitle("");
-                  setMovies([]);
-                  setNominatedMovies([]);
+                  // Continue improvement
+                  // setMovieTitle("");
+                  // setMovies([]);
+                  // setNominatedMovies([]);
                 }}
               >
                 Submit nominations
@@ -193,7 +243,7 @@ export const Nominations = () => {
               <h2>Search movie title</h2>
               <input
                 className={styles.input}
-                value={movieTitle}
+                value={moviesState.movieTitle}
                 onChange={handleMovieSearch}
                 type="text"
                 placeholder="Blade Runner"
@@ -203,10 +253,9 @@ export const Nominations = () => {
               isLoading={isLoading || localLoading}
               nominationFinished={nominationFinished}
               data={data}
-              movieTitle={movieTitle}
-              movies={movies}
-              setNominatedMovies={setNominatedMovies}
-              setMovies={setMovies}
+              movieTitle={moviesState.movieTitle}
+              dispatch={dispatch}
+              movies={moviesState.movies}
               setPage={setPage}
               totalResults={Number(data?.totalResults)}
               page={page}
@@ -214,12 +263,10 @@ export const Nominations = () => {
           </section>
           <section className={styles.rightSide}>
             <NominatedMovies
-              movies={movies}
-              setMovies={setMovies}
-              nominatedMovies={nominatedMovies}
-              setNominatedMovies={setNominatedMovies}
+              movies={moviesState.movies}
+              dispatch={dispatch}
+              nominatedMovies={moviesState.nominatedMovies}
               setShowBanner={setShowBanner}
-              setMovieTitle={setMovieTitle}
             />
           </section>
         </section>

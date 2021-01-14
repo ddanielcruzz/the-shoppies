@@ -1,5 +1,5 @@
 import React from "react";
-import { Movie } from "../../Nominations";
+import { Movie, MoviesAction } from "../../Nominations";
 import styles from "./NominatedMovies.module.css";
 import appStyles from "../../../../App.module.css";
 import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
@@ -9,37 +9,36 @@ import { ReactComponent as EmptyIcon } from "../../../../assets/svg/empty.svg";
 interface NominatedMoviesProps {
   movies: Movie[];
   nominatedMovies: Movie[];
-  setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
-  setNominatedMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
+  dispatch: React.Dispatch<MoviesAction>;
   setShowBanner: React.Dispatch<React.SetStateAction<boolean>>;
-  setMovieTitle: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const NominatedMovies = ({
   movies,
-  setMovies,
   nominatedMovies,
-  setNominatedMovies,
   setShowBanner,
-  setMovieTitle,
+  dispatch,
 }: NominatedMoviesProps) => {
   const handleRemoval = (movie: Movie) => {
-    setMovies(
-      movies.map((outMovie) => {
-        if (outMovie.imdbID === movie.imdbID) {
-          return {
-            ...outMovie,
-            isNominated: false,
-          };
-        }
-        return outMovie;
-      })
+    const updatedMovies = movies.map((outMovie) => {
+      if (outMovie.imdbID === movie.imdbID) {
+        return {
+          ...outMovie,
+          isNominated: false,
+        };
+      }
+      return outMovie;
+    });
+
+    const updatedNominatedMovies = nominatedMovies.filter(
+      (nominatedMovie) => nominatedMovie.imdbID !== movie.imdbID
     );
-    setNominatedMovies(
-      nominatedMovies.filter(
-        (nominatedMovie) => nominatedMovie.imdbID !== movie.imdbID
-      )
-    );
+
+    dispatch({
+      type: "removeNominatedMovie",
+      movies: updatedMovies,
+      nominatedMovies: updatedNominatedMovies,
+    });
   };
 
   return (
@@ -83,9 +82,10 @@ export const NominatedMovies = ({
             <button
               onClick={() => {
                 setShowBanner(false);
-                setMovieTitle("");
-                setMovies([]);
-                setNominatedMovies([]);
+                // Continue improvement
+                // setMovieTitle("");
+                // setMovies([]);
+                // setNominatedMovies([]);
               }}
               className={styles.submitBtn}
             >

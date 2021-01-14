@@ -1,5 +1,5 @@
 import React from "react";
-import { Movie, QueryResponse } from "../../Nominations";
+import { Movie, MoviesAction, QueryResponse } from "../../Nominations";
 import appStyles from "../../../../App.module.css";
 import styles from "./MovieResults.module.css";
 import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
@@ -7,9 +7,8 @@ import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeh
 interface MovieResultsProps {
   data?: QueryResponse;
   movieTitle?: string;
+  dispatch: React.Dispatch<MoviesAction>;
   movies: Movie[];
-  setNominatedMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
-  setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   totalResults: number;
   page: number;
@@ -21,8 +20,7 @@ export const MovieResults = ({
   data,
   movieTitle,
   movies,
-  setNominatedMovies,
-  setMovies,
+  dispatch,
   page,
   setPage,
   totalResults,
@@ -30,17 +28,17 @@ export const MovieResults = ({
   isLoading,
 }: MovieResultsProps) => {
   const handleNomination = (movie: Movie) => {
-    setMovies(
-      movies.map((outMovie) => {
-        if (outMovie.imdbID === movie.imdbID) {
-          return {
-            ...outMovie,
-            isNominated: true,
-          };
-        }
-        return outMovie;
-      })
-    );
+    const updatedMovies = movies.map((outMovie) => {
+      if (outMovie.imdbID === movie.imdbID) {
+        return {
+          ...outMovie,
+          isNominated: true,
+        };
+      }
+      return outMovie;
+    });
+
+    dispatch({ type: "addNominatedMovie", movies: updatedMovies });
 
     setNominatedMovies((prev) => [...prev, { ...movie, isNominated: true }]);
   };
