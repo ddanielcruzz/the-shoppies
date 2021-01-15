@@ -5,6 +5,7 @@ import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeh
 import { ReactComponent as EmptyIcon } from "../../../../assets/svg/empty.svg";
 import appStyles from "../../../../App.module.css";
 import styles from "./NominatedMovies.module.css";
+import { useHistory } from "react-router-dom";
 
 // Empty icon from <div>Icons made by "https://www.flaticon.com/authors/pixel-perfect"
 interface NominatedMoviesProps {
@@ -18,6 +19,8 @@ export const NominatedMovies = ({
   setShowBanner,
   dispatch,
 }: NominatedMoviesProps) => {
+  const history = useHistory();
+
   const handleRemoval = (nominatedMovieId: Movie["imdbID"]) => {
     dispatch({
       type: "removeNominatedMovie",
@@ -61,12 +64,12 @@ export const NominatedMovies = ({
               )
             )}
           </ul>
-          {/* TODO: Maybe use is nomination finished here */}
           {nominatedMovies.length === 5 && (
             <button
               onClick={() => {
                 setShowBanner(false);
                 dispatch({ type: "resetMovieState" });
+                history.push("/submitted");
               }}
               className={styles.submitBtn}
             >

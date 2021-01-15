@@ -7,6 +7,7 @@ import { useDebounce } from "../../lib/hooks/useDebounce";
 import confetti from "canvas-confetti";
 import appStyles from "../../App.module.css";
 import styles from "./Nominations.module.css";
+import { useHistory } from "react-router-dom";
 
 export interface Movie {
   Poster: string;
@@ -39,6 +40,7 @@ const moviesInitialState = {
 };
 
 export const Nominations = () => {
+  const history = useHistory();
   const [localLoading, setLocalLoading] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [page, setPage] = useState(1);
@@ -148,6 +150,7 @@ export const Nominations = () => {
             onClick={() => {
               setShowBanner(false);
               dispatch({ type: "resetMovieState" });
+              history.push("/submitted");
             }}
           >
             Submit nominations
