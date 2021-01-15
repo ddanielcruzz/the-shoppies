@@ -1,45 +1,31 @@
 import React from "react";
 import { Movie } from "../../Nominations";
-import styles from "./NominatedMovies.module.css";
-import appStyles from "../../../../App.module.css";
+import { MoviesAction } from "../../reducers";
 import moviePosterPlaceholder from "../../../../assets/images/film-poster-placeholder.png";
 import { ReactComponent as EmptyIcon } from "../../../../assets/svg/empty.svg";
+import appStyles from "../../../../App.module.css";
+import styles from "./NominatedMovies.module.css";
+import { useHistory } from "react-router-dom";
 
 // Empty icon from <div>Icons made by "https://www.flaticon.com/authors/pixel-perfect"
 interface NominatedMoviesProps {
-  movies: Movie[];
   nominatedMovies: Movie[];
-  setMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
-  setNominatedMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
+  dispatch: React.Dispatch<MoviesAction>;
   setShowBanner: React.Dispatch<React.SetStateAction<boolean>>;
-  setMovieTitle: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const NominatedMovies = ({
-  movies,
-  setMovies,
   nominatedMovies,
-  setNominatedMovies,
   setShowBanner,
-  setMovieTitle,
+  dispatch,
 }: NominatedMoviesProps) => {
-  const handleRemoval = (movie: Movie) => {
-    setMovies(
-      movies.map((outMovie) => {
-        if (outMovie.imdbID === movie.imdbID) {
-          return {
-            ...outMovie,
-            isNominated: false,
-          };
-        }
-        return outMovie;
-      })
-    );
-    setNominatedMovies(
-      nominatedMovies.filter(
-        (nominatedMovie) => nominatedMovie.imdbID !== movie.imdbID
-      )
-    );
+  const history = useHistory();
+
+  const handleRemoval = (nominatedMovieId: Movie["imdbID"]) => {
+    dispatch({
+      type: "removeNominatedMovie",
+      nominatedMovieId,
+    });
   };
 
   return (
@@ -51,9 +37,8 @@ export const NominatedMovies = ({
       {nominatedMovies.length > 0 ? (
         <>
           <ul className={styles.movieResults}>
-            {nominatedMovies.map((movie) => {
-              const { imdbID, Title, Year, Poster, isNominated } = movie;
-              return (
+            {nominatedMovies.map(
+              ({ imdbID, Title, Year, Poster, isNominated }) => (
                 <li className={styles.nominatedMovieItem} key={imdbID}>
                   <img
                     className={styles.nominatedMoviePoster}
@@ -70,22 +55,21 @@ export const NominatedMovies = ({
                     <button
                       className={appStyles.btnDanger}
                       disabled={!isNominated}
-                      onClick={() => handleRemoval(movie)}
+                      onClick={() => handleRemoval(imdbID)}
                     >
                       Remove
                     </button>
                   </section>
                 </li>
-              );
-            })}
+              )
+            )}
           </ul>
           {nominatedMovies.length === 5 && (
             <button
               onClick={() => {
                 setShowBanner(false);
-                setMovieTitle("");
-                setMovies([]);
-                setNominatedMovies([]);
+                dispatch({ type: "resetMovieState" });
+                history.push("/submitted");
               }}
               className={styles.submitBtn}
             >

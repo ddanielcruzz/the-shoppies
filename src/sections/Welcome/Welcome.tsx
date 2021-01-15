@@ -14,9 +14,9 @@ export const Welcome = () => {
         </h3>
         <button
           onClick={() => history.push("/nominations")}
-          className={appStyles.btnPrimary}
+          className={`${appStyles.btnPrimary} ${styles.vote}`}
         >
-          Start voting
+          Start voting <span className={styles.voteIcon}>👍</span>
         </button>
       </article>
     </main>

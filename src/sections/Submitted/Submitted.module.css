@@ -32,12 +32,12 @@
   margin: 15px 0;
 }
 
-.vote {
+.celebrate {
   position: relative;
   transition: all 0.3s;
 }
 
-.voteIcon {
+.celebrateIcon {
   position: absolute;
   right: 0;
   top: 50%;
@@ -46,11 +46,10 @@
   opacity: 0;
 }
 
-.vote:hover {
+.celebrate:hover {
   padding-right: 30px;
 }
-
-.vote:hover .voteIcon {
+.celebrate:hover .celebrateIcon {
   opacity: 1;
   transform: translate(-0.5rem, -55%);
 }

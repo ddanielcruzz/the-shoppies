@@ -1,10 +1,13 @@
-import confetti from "canvas-confetti";
-import React, { useCallback, useEffect, useState } from "react";
-import { QueryFunction, QueryFunctionContext, useQuery } from "react-query";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
+import { useQuery } from "react-query";
 import { MovieResults, NominatedMovies } from "./components";
+import { moviesReducer } from "./reducers";
+import { fetchMovies } from "./utils";
 import { useDebounce } from "../../lib/hooks/useDebounce";
+import confetti from "canvas-confetti";
 import appStyles from "../../App.module.css";
 import styles from "./Nominations.module.css";
+import { useHistory } from "react-router-dom";
 
 export interface Movie {
   Poster: string;
@@ -13,6 +16,11 @@ export interface Movie {
   imdbID: string;
   isNominated: boolean;
 }
+export interface MoviesState {
+  movies: Movie[];
+  nominatedMovies: Movie[];
+  movieTitle: string;
+}
 export interface QueryResponse {
   Response: string;
   Search: Movie[];
@@ -20,32 +28,26 @@ export interface QueryResponse {
   Error?: string;
 }
 
-const fetchMovies: QueryFunction = async ({
-  queryKey,
-}: QueryFunctionContext<string[]>) => {
-  const [, movieTitle, page] = queryKey;
+export interface Metadata {
+  moviesError: string | undefined;
+  totalResults: number;
+}
 
-  const res = await fetch(
-    `https://www.omdbapi.com/?apikey=${
-      process.env.REACT_APP_API
-    }&type=movie&page=${page}&s=${encodeURI(
-      movieTitle.toLocaleLowerCase().trim()
-    )}`
-  );
-
-  if (!res.ok) throw new Error("Network request failed");
-
-  return res.json();
+const moviesInitialState = {
+  movies: [],
+  nominatedMovies: [],
+  movieTitle: "",
 };
 
 export const Nominations = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [movieTitle, setMovieTitle] = useState("");
+  const history = useHistory();
   const [localLoading, setLocalLoading] = useState(false);
-  const [nominatedMovies, setNominatedMovies] = useState<Movie[]>([]);
   const [showBanner, setShowBanner] = useState(false);
-  const [nominationFinished, setNominationFinished] = useState(false);
   const [page, setPage] = useState(1);
+
+  const [moviesState, dispatch] = useReducer(moviesReducer, moviesInitialState);
+  const { movieTitle, nominatedMovies } = moviesState;
+
   const debouncedMovieTitle = useDebounce(movieTitle, 1000);
 
   useEffect(() => {
@@ -59,7 +61,6 @@ export const Nominations = () => {
       };
 
       setShowBanner(true);
-      setNominationFinished(true);
 
       const interval: NodeJS.Timeout = setInterval(function () {
         const timeLeft = animationEnd - Date.now();
@@ -90,12 +91,6 @@ export const Nominations = () => {
     }
   }, [nominatedMovies]);
 
-  useEffect(() => {
-    if (nominationFinished && nominatedMovies.length < 5) {
-      setNominationFinished(false);
-    }
-  }, [nominatedMovies, nominationFinished]);
-
   const { data, refetch, isLoading } = useQuery<
     unknown,
     unknown,
@@ -104,20 +99,15 @@ export const Nominations = () => {
     keepPreviousData: true,
     onSuccess: (data) => {
       if (!data.Error) {
-        const fetchedMovies = data.Search.map((movie) => {
-          if (
-            nominatedMovies.find(
-              (nominated) => nominated.imdbID === movie.imdbID
-            )
-          )
-            return { ...movie, isNominated: true };
-          return {
-            ...movie,
-            isNominated: false,
-          };
-        });
-
-        setMovies(fetchedMovies);
+        const fetchedMovies = data.Search.map((movie) =>
+          nominatedMovies.find((nominated) => nominated.imdbID === movie.imdbID)
+            ? { ...movie, isNominated: true }
+            : {
+                ...movie,
+                isNominated: false,
+              }
+        );
+        dispatch({ type: "updateMovies", movies: fetchedMovies });
       }
     },
     enabled: false,
@@ -141,40 +131,45 @@ export const Nominations = () => {
       target: { value },
     } = evt;
     setLocalLoading(true);
-    setMovieTitle(value);
+    dispatch({ type: "updateMovieTitle", title: value });
   };
+
+  const metadata: Metadata = {
+    moviesError: data?.Error,
+    totalResults: Number(data?.totalResults),
+  };
+
+  const bannerJSX = (
+    <>
+      <article className={styles.finishModal}>
+        <h2>Congratulations! 🎉 🎊</h2>
+        <h2>You finished your nomination</h2>
+        <div className={styles.modalBtns}>
+          <button
+            className={appStyles.btnPrimary}
+            onClick={() => {
+              setShowBanner(false);
+              dispatch({ type: "resetMovieState" });
+              history.push("/submitted");
+            }}
+          >
+            Submit nominations
+          </button>
+          <button
+            className={appStyles.btnPrimaryGhost}
+            onClick={() => setShowBanner(false)}
+          >
+            Edit nominations
+          </button>
+        </div>
+      </article>
+      <div className={styles.overlay} />
+    </>
+  );
 
   return (
     <div>
-      {showBanner && (
-        <>
-          <article className={styles.finishModal}>
-            <h2>Congratulations! 🎉 🎊</h2>
-            <h2>You finished your nomination</h2>
-            <div className={styles.modalBtns}>
-              <button
-                className={appStyles.btnPrimary}
-                onClick={() => {
-                  setShowBanner(false);
-                  setMovieTitle("");
-                  setMovies([]);
-                  setNominatedMovies([]);
-                }}
-              >
-                Submit nominations
-              </button>
-              <button
-                className={appStyles.btnPrimaryGhost}
-                onClick={() => setShowBanner(false)}
-              >
-                Edit nominations
-              </button>
-            </div>
-          </article>
-          <div className={styles.overlay} />
-        </>
-      )}
-
+      {showBanner && bannerJSX}
       <main className={styles.main}>
         <h1 className={styles.title}>The Shoppies 🏆🍿</h1>
         <section className={styles.instructions}>
@@ -201,25 +196,17 @@ export const Nominations = () => {
             </section>
             <MovieResults
               isLoading={isLoading || localLoading}
-              nominationFinished={nominationFinished}
-              data={data}
-              movieTitle={movieTitle}
-              movies={movies}
-              setNominatedMovies={setNominatedMovies}
-              setMovies={setMovies}
-              setPage={setPage}
-              totalResults={Number(data?.totalResults)}
-              page={page}
+              metadata={metadata}
+              moviesState={moviesState}
+              dispatch={dispatch}
+              pageState={{ page, setPage }}
             />
           </section>
           <section className={styles.rightSide}>
             <NominatedMovies
-              movies={movies}
-              setMovies={setMovies}
               nominatedMovies={nominatedMovies}
-              setNominatedMovies={setNominatedMovies}
+              dispatch={dispatch}
               setShowBanner={setShowBanner}
-              setMovieTitle={setMovieTitle}
             />
           </section>
         </section>

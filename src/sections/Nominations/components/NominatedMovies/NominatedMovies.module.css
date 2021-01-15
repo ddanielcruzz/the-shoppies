@@ -5,7 +5,7 @@
 .nominatedMoviePoster {
   max-width: 60px;
   border-radius: 5px;
-
+  min-height: 90px;
   object-fit: cover;
 }
 .nominatedTitleAndYear {
