@@ -17,7 +17,7 @@ export const Submitted = () => {
       <article className={`${appStyles.container} ${styles.intro}`}>
         <h1>Congratulations on your submission! 🎊🎈</h1>
         <h3 className={styles.description}>
-          We really hove your movies get nominated for a Shoppie
+          We really hope your movies get nominated for a Shoppie
         </h3>
         <button
           onClick={launchConfetti}
