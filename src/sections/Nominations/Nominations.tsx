@@ -173,7 +173,7 @@ export const Nominations = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>The Shoppies 🏆🍿</h1>
         <section className={styles.instructions}>
-          <h3>How to use:</h3>
+          <h2>How to use:</h2>
           <ol>
             <li>Use the search bar to look for your favorite movies 🔎</li>
             <li>Hover over the poster to show the nomination button ⭐️</li>
@@ -185,14 +185,16 @@ export const Nominations = () => {
             <section
               className={`${appStyles.container} ${styles.inputContainer}`}
             >
-              <h2>Search movie title</h2>
-              <input
-                className={styles.input}
-                value={movieTitle}
-                onChange={handleMovieSearch}
-                type="text"
-                placeholder="Blade Runner"
-              />
+              <label className={styles.inputLabel}>
+                Search movie title
+                <input
+                  className={styles.input}
+                  value={movieTitle}
+                  onChange={handleMovieSearch}
+                  type="text"
+                  placeholder="Blade Runner"
+                />
+              </label>
             </section>
             <MovieResults
               isLoading={isLoading || localLoading}
